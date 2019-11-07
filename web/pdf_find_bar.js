@@ -38,6 +38,7 @@ class PDFFindBar {
     this.findResultsCount = options.findResultsCount || null;
     this.findPreviousButton = options.findPreviousButton || null;
     this.findNextButton = options.findNextButton || null;
+    this.findJumpLink = options.findJumpLink || null;
     this.eventBus = eventBus;
     this.l10n = l10n;
 
@@ -71,6 +72,12 @@ class PDFFindBar {
       this.dispatchEvent('again', false);
     });
 
+    this.findJumpLink.addEventListener('click', (e)=> {
+      const query = e.target.data('query');
+      const index = e.target.data('index');
+      this.dispatchEvent('jump', false, { query, index });
+    })
+
     this.highlightAll.addEventListener('click', () => {
       this.dispatchEvent('highlightallchange');
     });
@@ -90,16 +97,17 @@ class PDFFindBar {
     this.updateUIState();
   }
 
-  dispatchEvent(type, findPrev) {
+  dispatchEvent(type, findPrev, options) {
     this.eventBus.dispatch('find', {
       source: this,
       type,
-      query: this.findField.value,
+      query: options.query || this.findField.value,
       phraseSearch: true,
       caseSensitive: this.caseSensitive.checked,
       entireWord: this.entireWord.checked,
       highlightAll: this.highlightAll.checked,
       findPrevious: findPrev,
+      index: options.index
     });
   }
 

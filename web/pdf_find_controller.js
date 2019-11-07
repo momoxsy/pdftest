@@ -16,6 +16,7 @@
 import { getGlobalEventBus, scrollIntoView } from './ui_utils';
 import { createPromiseCapability } from 'pdfjs-lib';
 import { getCharacterType } from './pdf_find_utils';
+import { pdfSearchController } from './pdf_search_controller';
 
 const FindState = {
   FOUND: 0,
@@ -161,6 +162,8 @@ class PDFFindController {
         if (findbarClosed && this._state.highlightAll) {
           this._updateAllPages();
         }
+      } else if (cmd === 'findjump') {
+        this._jumpMatch(state.query, state.index);
       } else if (cmd === 'findhighlightallchange') {
         // If there was a pending search operation, synchronously trigger a new
         // search *first* to ensure that the correct matches are highlighted.
@@ -174,6 +177,15 @@ class PDFFindController {
         this._nextMatch();
       }
     });
+  }
+  _jumpMatch(query, index) {
+    pdfSearchController._setActiveSearch(query, this._pageContents);
+    pdfSearchController._getActivitySearch(index);
+    const { pageIdx, matchIdx } = pdfSearchController.activeSearch;
+    this._selected = { pageIdx, matchIdx };
+    this._pageMatches = pdfSearchController._searchMatchIndexs[query];
+    this._pageMatchesLength = this._pageMatches.length;
+    this._updateMatch(true);
   }
 
   scrollMatchIntoView({ element = null, pageIndex = -1, matchIndex = -1, }) {
@@ -240,7 +252,9 @@ class PDFFindController {
       return true;
     }
     switch (cmd) {
+      case 'findagainx': //find next x 
       case 'findagain':
+        debugger;
         const pageNumber = this._selected.pageIdx + 1;
         const linkService = this._linkService;
         // Only treat a 'findagain' event as a new search operation when it's

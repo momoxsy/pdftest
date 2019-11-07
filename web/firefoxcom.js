@@ -171,6 +171,7 @@ class MozL10n {
     'findcasesensitivitychange',
     'findentirewordchange',
     'findbarclose',
+    'findjump',
   ];
   const handleEvent = function({ type, detail, }) {
     if (!PDFViewerApplication.initialized) {
