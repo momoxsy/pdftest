@@ -150,7 +150,6 @@ class TextLayerBuilder {
       return [];
     }
     const { findController, textContentItemsStr, } = this;
-    debugger;
     let i = 0, iIndex = 0;
     const end = textContentItemsStr.length - 1;
     const queryLen = findController.state.query.length;
@@ -204,7 +203,6 @@ class TextLayerBuilder {
 
   _renderMatches(matches) {
     // Early exit if there is nothing to render.
-    debugger;
     if (matches.length === 0) {
       return;
     }

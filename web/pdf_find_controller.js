@@ -143,7 +143,11 @@ class PDFFindController {
         clearTimeout(this._findTimeout);
         this._findTimeout = null;
       }
-      if (cmd === 'find') {
+      if(cmd === 'findadd') {
+        this._addFindQuery();
+      }else if (cmd === 'findjump') {
+        this._jumpMatch(state.query, state.index);
+      }else if (cmd === 'find') {
         // Trigger the find action with a small delay to avoid starting the
         // search when the user is still typing (saving resources).
         this._findTimeout = setTimeout(() => {
@@ -162,9 +166,7 @@ class PDFFindController {
         if (findbarClosed && this._state.highlightAll) {
           this._updateAllPages();
         }
-      } else if (cmd === 'findjump') {
-        this._jumpMatch(state.query, state.index);
-      } else if (cmd === 'findhighlightallchange') {
+      }  else if (cmd === 'findhighlightallchange') {
         // If there was a pending search operation, synchronously trigger a new
         // search *first* to ensure that the correct matches are highlighted.
         if (pendingTimeout) {
@@ -179,8 +181,8 @@ class PDFFindController {
     });
   }
   _jumpMatch(query, index) {
-    pdfSearchController._setActiveSearch(query, this._pageContents);
-    pdfSearchController._getActivitySearch(index);
+    // pdfSearchController._setActiveSearch(query, this._pageContents);
+    pdfSearchController._getActivitySearch(query, index);
     const { pageIdx, matchIdx } = pdfSearchController.activeSearch;
     this._selected = { pageIdx, matchIdx };
     this._pageMatches = pdfSearchController._searchMatchIndexs[query];
@@ -252,9 +254,10 @@ class PDFFindController {
       return true;
     }
     switch (cmd) {
-      case 'findagainx': //find next x 
+      case 'findadd': //find next x 
+          return true;
+          break;
       case 'findagain':
-        debugger;
         const pageNumber = this._selected.pageIdx + 1;
         const linkService = this._linkService;
         // Only treat a 'findagain' event as a new search operation when it's
@@ -272,6 +275,7 @@ class PDFFindController {
         }
         return false;
       case 'findhighlightallchange':
+      case 'findjump':
         return false;
     }
     return true;
@@ -502,6 +506,13 @@ class PDFFindController {
       source: this,
       pageIndex: -1,
     });
+  }
+
+  _addFindQuery() {
+    debugger;
+    const query = this._state.query;
+    pdfSearchController._setActiveSearch(query, this._pageContents, this._pageMatches);
+    pdfSearchController._insertQuerySearch(query);
   }
 
   _nextMatch() {

@@ -7,6 +7,8 @@ class PDFSearchController {
     constructor() {
         this._reset();
         this._query = '';
+        this._searchMatchIndexs = {};
+        this._searchMatchText = {};
     }
 
     get activeSearch() {
@@ -38,43 +40,59 @@ class PDFSearchController {
         this._pageContents = pageContents;
     }
 
-    _setActiveSearch(query) {
-        if(!query || !pageContents.length) {
+    _setActiveSearch(query, pageContents, pageMatchs) {
+        if(!query || !pageContents) {
             return ;
         }
 
+        // let searchMatchText = [];
+        // let searchMatchIndex = [];
+
+        // this._pageContents.split(' ').map((singlePageTexts)=> {
+        //     let singlePageMatchText = [];
+        //     let singlePageMatchIndex = [];
+        //     let currentIndex = 0;
+        //     singlePageTexts.map((item, index)=> {
+        //         const selectIndex = item.indexOf(query);
+        //         if(selectIndex !== -1) {
+        //             singlePageMatchIndex.push(currentIndex + selectIndex);
+        //             singlePageMatchText.push(this._getSinglePageMatchText(singlePageTexts, index));
+        //         }
+        //         currentIndex += item.length;
+        //     });
+        //     searchMatchText.push(singlePageMatchText);
+        //     searchMatchIndex.push(singlePageMatchIndex);
+        // });
         let searchMatchText = [];
-        let searchMatchIndex = [];
-        this._pageContents.map((singlePageTexts)=> {
-            let singlePageMatchText = [];
-            let singlePageMatchIndex = [];
+        pageContents.map(singlePageContent => {
             let currentIndex = 0;
-            singlePageTexts.map((item, index)=> {
+            let singlePageMatchText = [];
+            let contentArr = singlePageContent.split(' ');
+            contentArr.map((item, index)=> {
                 const selectIndex = item.indexOf(query);
                 if(selectIndex !== -1) {
-                    singlePageMatchIndex.push(currentIndex + selectIndex);
-                    singlePageMatchText.push(this._getSinglePageMatchText(singlePageTexts, index));
+                    singlePageMatchText.push(this._getSinglePageMatchText(contentArr, index));
                 }
                 currentIndex += item.length;
-            });
+            })
             searchMatchText.push(singlePageMatchText);
-            searchMatchIndex.push(singlePageMatchIndex);
-        });
-
-        this._searchMatchIndexs[query] = searchMatchIndex;
+        })
+        this._searchMatchIndexs[query] = pageMatchs;
         this._searchMatchText[query] = searchMatchText;
+        this.setPageContents(pageContents);
     }
 
     _getSinglePageMatchText(items, index) {
         let preText = index === 0 ? '' : items[index - 1];
         let nextText = index + 1 > items.length ? '' : items[index + 1];
 
-        return [preText, items[index], nextText].join('');
+        return [preText, items[index], nextText].join(' ');
     }
 
-    _getActivitySearch(index, noMatchCBFn) {
+    _getActivitySearch(query, index, noMatchCBFn) {
         const currentSearchMatchIndex = this._searchMatchIndexs[query];
-        for(let i = 0; i < currentSearchMatchIndex.length; i++) {
+        let i = 0;
+        for(; i < currentSearchMatchIndex.length; i++) {
             let matchArr = currentSearchMatchIndex[i];
             if(matchArr.length >= index) {
                 this._activeSearch = {
@@ -89,6 +107,28 @@ class PDFSearchController {
         if(i >= currentSearchMatchIndex.length) {
             noMatchCBFn&&noMatchCBFn('no match');
         }            
+    }
+    _insertQuerySearch(query) {
+        const $searchList = document.getElementById('searchListView');
+        const queryTpl = `<div class="singleQuery">
+                            <div>
+                                <span class="query">{{query}}</span>
+                                <span class="close" data-query={{query}}>X</span>
+                            </div>
+                            <div class="textList" data-query={{query}}>{{textList}}</div>
+                        </div>`;
+        const textTpl = `<div class="text" data-index={{index}}>{{text}}</div>`;
+        let index = 0;
+        const $textList = this._searchMatchText[query].map((text) => {
+            return text.map(t => {
+                index ++;
+                return textTpl.replace('{{index}}', index).replace('{{text}}', text);
+            })
+        });
+
+        $searchList.innerHTML +=
+            queryTpl.replace(/{{query}}/g, query)
+                .replace('{{textList}}', $textList.join(''));
     }
 
 }

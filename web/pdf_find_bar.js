@@ -38,6 +38,7 @@ class PDFFindBar {
     this.findResultsCount = options.findResultsCount || null;
     this.findPreviousButton = options.findPreviousButton || null;
     this.findNextButton = options.findNextButton || null;
+    this.findAddButton = options.addButton || null;
     this.findJumpLink = options.findJumpLink || null;
     this.eventBus = eventBus;
     this.l10n = l10n;
@@ -71,12 +72,27 @@ class PDFFindBar {
     this.findNextButton.addEventListener('click', () => {
       this.dispatchEvent('again', false);
     });
-
-    this.findJumpLink.addEventListener('click', (e)=> {
-      const query = e.target.data('query');
-      const index = e.target.data('index');
-      this.dispatchEvent('jump', false, { query, index });
+    this.findAddButton.addEventListener('click', ()=> {
+      this.dispatchEvent('add');
     })
+    this.findJumpLink.addEventListener('click', (e)=> {
+      // const query = e.target.data('query');
+      // const index = e.target.data('index');
+      // this.dispatchEvent('jump', false, { query, index });
+      const target = e.target;
+      let query = '';
+      switch(target.className) {
+        case 'close':
+          query = target.getAttribute('data-query');
+          this.dispatchEvent('searchClose', null, {query});
+          break;
+        case 'text': 
+          query = target.parentNode.getAttribute('data-query');
+          const index = target.getAttribute('data-index');
+          this.dispatchEvent('jump', null, {query, index});
+          break;
+      }
+    }, false)
 
     this.highlightAll.addEventListener('click', () => {
       this.dispatchEvent('highlightallchange');
@@ -97,7 +113,7 @@ class PDFFindBar {
     this.updateUIState();
   }
 
-  dispatchEvent(type, findPrev, options) {
+  dispatchEvent(type, findPrev, options = {}) {
     this.eventBus.dispatch('find', {
       source: this,
       type,

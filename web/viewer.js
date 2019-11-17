@@ -139,6 +139,8 @@ function getViewerConfiguration() {
       findResultsCount: document.getElementById('findResultsCount'),
       findPreviousButton: document.getElementById('findPrevious'),
       findNextButton: document.getElementById('findNext'),
+      addButton: document.getElementById('add'),
+      findJumpLink: document.getElementById('searchListView')
     },
     passwordOverlay: {
       overlayName: 'passwordOverlay',
