@@ -1841,6 +1841,11 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   display: none;
 }
 
+#searchListView{
+  position: absolute;
+  background: white;
+}
+
 @media all and (max-width: 900px) {
   #toolbarViewerMiddle {
     display: table;

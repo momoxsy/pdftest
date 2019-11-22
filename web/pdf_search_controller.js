@@ -97,7 +97,7 @@ class PDFSearchController {
             if(matchArr.length >= index) {
                 this._activeSearch = {
                     matchIdx: index,
-                    pageIdx: i
+                    pageIdx: i - 1
                 };
                 break;
             }else{
@@ -117,12 +117,12 @@ class PDFSearchController {
                             </div>
                             <div class="textList" data-query={{query}}>{{textList}}</div>
                         </div>`;
-        const textTpl = `<div class="text" data-index={{index}}>{{text}}</div>`;
+        const textTpl = `<div class="text" data-index={{index}}>{{num}}.{{text}}</div>`;
         let index = 0;
         const $textList = this._searchMatchText[query].map((text) => {
             return text.map(t => {
                 index ++;
-                return textTpl.replace('{{index}}', index).replace('{{text}}', text);
+                return textTpl.replace(/{{index}}/g, index).replace('{{text}}', text).replace('{{num}}', index + 1);
             })
         });
 
