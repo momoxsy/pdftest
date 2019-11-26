@@ -41,6 +41,34 @@ class PDFSearchController {
     }
 
     _setActiveSearch(query, pageContents, pageMatchs) {
+        let splitCount = 20;
+        if(!query || !pageContents) {
+            return ;
+        }
+
+        let searchMatchText = [];
+        pageContents.map((singlePageContent, index)=> {
+            let currentPageMatchs = pageMatchs[index];
+            if(currentPageMatchs.length){
+                currentPageMatchs.map(findIndex=> {
+                    const MIN = 0;
+                    const MAX = singlePageContent.length;
+                    let start = findIndex - splitCount;
+                    let end = findIndex + splitCount;
+                    start = start < MIN ? MIN : start;
+                    end = end > MAX ? MAX : end;
+                    searchMatchText.push(
+                        singlePageContent.slice(start, end)
+                    );
+                })
+            }
+        })
+        this._searchMatchIndexs[query] = pageMatchs;
+        this._searchMatchText[query] = searchMatchText;
+        this.setPageContents(pageContents);
+    }
+
+    _setActiveSearch2(query, pageContents, pageMatchs) {
         if(!query || !pageContents) {
             return ;
         }
@@ -120,10 +148,12 @@ class PDFSearchController {
         const textTpl = `<div class="text" data-index={{index}}>{{num}}.{{text}}</div>`;
         let index = 0;
         const $textList = this._searchMatchText[query].map((text) => {
-            return text.map(t => {
-                index ++;
-                return textTpl.replace(/{{index}}/g, index).replace('{{text}}', text).replace('{{num}}', index + 1);
-            })
+            index ++;
+            return textTpl.replace(/{{index}}/g, index).replace('{{text}}', text).replace('{{num}}', index);
+            // return text.map(t => {
+            //     index ++;
+            //     return textTpl.replace(/{{index}}/g, index).replace('{{text}}', text).replace('{{num}}', index);
+            // })
         });
 
         $searchList.innerHTML +=

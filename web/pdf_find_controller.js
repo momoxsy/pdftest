@@ -186,12 +186,13 @@ class PDFFindController {
     pdfSearchController._getActivitySearch(query, index);
     const { pageIdx, matchIdx } = pdfSearchController.activeSearch;
     this._selected = { pageIdx, matchIdx };
+    this._offset.pageIdx = pageIdx;
+    this._offset.matchIdx = matchIdx;
     this._pageMatches = pdfSearchController._searchMatchIndexs[query];
     this._pageMatchesLength = this._pageMatches.length;
     this._scrollMatches = true;
     this._updatePage(this._selected.pageIdx);
-    PDFFindBar._updateUIState(FindState.FOUND, null, this._pageMatches.length)
-    // this._updateUIState(FindState.FOUND);
+    this._updateUIState(FindState.FOUND);
   }
 
   scrollMatchIntoView({ element = null, pageIndex = -1, matchIndex = -1, }) {
@@ -512,7 +513,7 @@ class PDFFindController {
     });
   }
 
-  _addFindQuery() {
+  _addFindQuery() {debugger;
     const query = this._state.query;
     pdfSearchController._setActiveSearch(query, this._pageContents, this._pageMatches);
     pdfSearchController._insertQuerySearch(query);
