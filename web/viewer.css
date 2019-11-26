@@ -1844,6 +1844,26 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 #searchListView{
   position: absolute;
   background: white;
+  padding: 5px;
+}
+#searchListView .text{
+  margin: 5px;
+  cursor: pointer;
+}
+#searchListView .textList{
+  margin-left: 5px;
+}
+#searchListView .singleQuery{
+  position: relative;
+}
+#searchListView .close{
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+}
+#add{
+  color: white;
+  cursor: pointer;
 }
 
 @media all and (max-width: 900px) {

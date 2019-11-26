@@ -124,8 +124,8 @@ class PDFSearchController {
             let matchArr = currentSearchMatchIndex[i];
             if(matchArr.length >= index) {
                 this._activeSearch = {
-                    matchIdx: index,
-                    pageIdx: i - 1
+                    matchIdx: index - 1,
+                    pageIdx: i
                 };
                 break;
             }else{

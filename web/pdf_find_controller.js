@@ -146,6 +146,8 @@ class PDFFindController {
       }
       if(cmd === 'findadd') {
         this._addFindQuery();
+      }else if(cmd === 'findclose') {
+        this._clearQuery()
       }else if (cmd === 'findjump') {
         this._jumpMatch(state.query, state.index);
       }else if (cmd === 'find') {
@@ -513,9 +515,10 @@ class PDFFindController {
     });
   }
 
-  _addFindQuery() {debugger;
+  _addFindQuery() {
+    debugger;
     const query = this._state.query;
-    pdfSearchController._setActiveSearch(query, this._pageContents, this._pageMatches);
+    pdfSearchController._setActiveSearch(query, this._pageContents, this._pageMatches.slice());
     pdfSearchController._insertQuerySearch(query);
   }
 
@@ -535,7 +538,7 @@ class PDFFindController {
       this._offset.wrapped = false;
       this._resumePageIdx = null;
       this._pageMatches.length = 0;
-      this._pageMatchesLength.length = 0;
+      this._pageMatchesLength = [];
       this._matchesCountTotal = 0;
 
       this._updateAllPages(); // Wipe out any previously highlighted matches.
