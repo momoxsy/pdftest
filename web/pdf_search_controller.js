@@ -73,24 +73,6 @@ class PDFSearchController {
             return ;
         }
 
-        // let searchMatchText = [];
-        // let searchMatchIndex = [];
-
-        // this._pageContents.split(' ').map((singlePageTexts)=> {
-        //     let singlePageMatchText = [];
-        //     let singlePageMatchIndex = [];
-        //     let currentIndex = 0;
-        //     singlePageTexts.map((item, index)=> {
-        //         const selectIndex = item.indexOf(query);
-        //         if(selectIndex !== -1) {
-        //             singlePageMatchIndex.push(currentIndex + selectIndex);
-        //             singlePageMatchText.push(this._getSinglePageMatchText(singlePageTexts, index));
-        //         }
-        //         currentIndex += item.length;
-        //     });
-        //     searchMatchText.push(singlePageMatchText);
-        //     searchMatchIndex.push(singlePageMatchIndex);
-        // });
         let searchMatchText = [];
         pageContents.map(singlePageContent => {
             let currentIndex = 0;
@@ -141,7 +123,7 @@ class PDFSearchController {
         const queryTpl = `<div class="singleQuery">
                             <div>
                                 <span class="query">{{query}}</span>
-                                <span class="close" data-query={{query}}>X</span>
+                                <span style="display:none;" class="close" data-query={{query}}>X</span>
                             </div>
                             <div class="textList" data-query={{query}}>{{textList}}</div>
                         </div>`;
@@ -150,10 +132,6 @@ class PDFSearchController {
         const $textList = this._searchMatchText[query].map((text) => {
             index ++;
             return textTpl.replace(/{{index}}/g, index).replace('{{text}}', text).replace('{{num}}', index);
-            // return text.map(t => {
-            //     index ++;
-            //     return textTpl.replace(/{{index}}/g, index).replace('{{text}}', text).replace('{{num}}', index);
-            // })
         });
 
         $searchList.innerHTML +=

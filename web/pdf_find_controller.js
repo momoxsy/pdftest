@@ -17,7 +17,6 @@ import { getGlobalEventBus, scrollIntoView } from './ui_utils';
 import { createPromiseCapability } from 'pdfjs-lib';
 import { getCharacterType } from './pdf_find_utils';
 import { pdfSearchController } from './pdf_search_controller';
-import { PDFFindBar } from './pdf_find_bar';
 
 const FindState = {
   FOUND: 0,
@@ -193,6 +192,9 @@ class PDFFindController {
     this._pageMatches = pdfSearchController._searchMatchIndexs[query];
     this._pageMatchesLength = this._pageMatches.length;
     this._scrollMatches = true;
+    if(this._query !== query) {
+      this._dirtyMatch = true;
+    }
     this._updatePage(this._selected.pageIdx);
     this._updateUIState(FindState.FOUND);
   }
