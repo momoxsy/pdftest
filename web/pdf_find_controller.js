@@ -190,13 +190,15 @@ class PDFFindController {
     this._offset.pageIdx = pageIdx;
     this._offset.matchIdx = matchIdx;
     this._pageMatches = pdfSearchController._searchMatchIndexs[query];
-    this._pageMatchesLength = this._pageMatches.length;
+    this._matchesCountTotal = this._pageMatches.reduce((num, match)=> num - 0 + match.length);
     this._scrollMatches = true;
-    if(this._query !== query) {
+    if(this._rawQuery !== query) {
       this._dirtyMatch = true;
+      this._rawQuery = query;
+      document.getElementById('findInput').value = query;
     }
     this._updatePage(this._selected.pageIdx);
-    this._updateUIState(FindState.FOUND);
+    this._updateUIState(FindState.FOUND, null, this._matchesCountTotal);
   }
 
   scrollMatchIntoView({ element = null, pageIndex = -1, matchIndex = -1, }) {
@@ -520,7 +522,7 @@ class PDFFindController {
   _addFindQuery() {
     debugger;
     const query = this._state.query;
-    pdfSearchController._setActiveSearch(query, this._pageContents, this._pageMatches.slice());
+    pdfSearchController._setActiveSearch(query, this._pageContents, [...this._pageMatches]);
     pdfSearchController._insertQuerySearch(query);
   }
 
