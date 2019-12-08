@@ -123,6 +123,7 @@ function getViewerConfiguration() {
       thumbnailView: document.getElementById('thumbnailView'),
       outlineView: document.getElementById('outlineView'),
       attachmentsView: document.getElementById('attachmentsView'),
+      searchListView: document.getElementById('searchListView'),
     },
     sidebarResizer: {
       outerContainer: document.getElementById('outerContainer'),

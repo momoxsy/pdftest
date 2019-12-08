@@ -524,6 +524,7 @@ class PDFFindController {
     const query = this._state.query;
     pdfSearchController._setActiveSearch(query, this._pageContents, [...this._pageMatches]);
     pdfSearchController._insertQuerySearch(query);
+    this._eventBus.dispatch('searchlistview');
   }
 
   _nextMatch() {

@@ -25,6 +25,7 @@ const SidebarView = {
   OUTLINE: 2,
   ATTACHMENTS: 3,
   LAYERS: 4,
+  SEARCHLIST: 5,
 };
 
 /**
@@ -90,6 +91,7 @@ class PDFSidebar {
     this.thumbnailView = elements.thumbnailView;
     this.outlineView = elements.outlineView;
     this.attachmentsView = elements.attachmentsView;
+    this.searchListView = elements.searchListView;
 
     this.eventBus = eventBus;
     this.l10n = l10n;
@@ -125,6 +127,10 @@ class PDFSidebar {
 
   get isAttachmentsViewVisible() {
     return (this.isOpen && this.active === SidebarView.ATTACHMENTS);
+  }
+
+  get isSearchListViewVisible() {
+    return (this.isOpen && this.active === SidebarView.SEARCHLIST);
   }
 
   /**
@@ -190,6 +196,8 @@ class PDFSidebar {
           return false;
         }
         break;
+      case SidebarView.SEARCHLIST:
+        break;
       default:
         console.error(`PDFSidebar._switchView: "${view}" is not a valid view.`);
         return false;
@@ -210,7 +218,7 @@ class PDFSidebar {
     this.outlineView.classList.toggle('hidden', view !== SidebarView.OUTLINE);
     this.attachmentsView.classList.toggle('hidden',
       view !== SidebarView.ATTACHMENTS);
-
+    this.searchListView.classList.toggle('hidden', view !== SidebarView.SEARCHLIST);
     if (forceOpen && !this.isOpen) {
       this.open();
       return true; // Opening will trigger rendering and dispatch the event.
@@ -452,6 +460,10 @@ class PDFSidebar {
         }
       });
     });
+
+    this.eventBus.on('searchlistviews', evt=> {
+      this.switchView(SidebarView.SEARCHLIST);
+    })
 
     // Update the thumbnailViewer, if visible, when exiting presentation mode.
     this.eventBus.on('presentationmodechanged', (evt) => {
