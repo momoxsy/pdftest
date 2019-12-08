@@ -1843,7 +1843,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 
 #searchListView{
   position: absolute;
-  background: white;
+  color: white;
   padding: 5px;
 }
 #searchListView .text{
@@ -1852,6 +1852,7 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 }
 #searchListView .textList{
   margin-left: 5px;
+  font-size: 14px;
 }
 #searchListView .singleQuery{
   position: relative;
