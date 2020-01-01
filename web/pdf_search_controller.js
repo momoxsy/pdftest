@@ -53,7 +53,7 @@ class PDFSearchController {
                 currentPageMatchs.map(findIndex=> {
                     const MIN = 0;
                     const MAX = singlePageContent.length;
-                    let start = findIndex - splitCount;
+                    let start = findIndex - 2;
                     let end = findIndex + splitCount;
                     start = start < MIN ? MIN : start;
                     end = end > MAX ? MAX : end;
@@ -127,16 +127,24 @@ class PDFSearchController {
                             </div>
                             <div class="textList" data-query={{query}}>{{textList}}</div>
                         </div>`;
-        const textTpl = `<div class="text" data-index={{index}}>{{num}}.{{text}}</div>`;
+        const textTpl = `<div class="text" data-index={{index}}>——{{text}}</div>`;
+        const countTpl = `<div class="count"><span class="query">{{query}}</span> 关键词 {{count}}个匹配</div>`;
         let index = 0;
         const $textList = this._searchMatchText[query].map((text) => {
             index ++;
-            return textTpl.replace(/{{index}}/g, index).replace('{{text}}', text).replace('{{num}}', index);
+            return textTpl.replace(/{{index}}/g, index)
+                    .replace('{{text}}', text)
+                    .replace(query, `<span class="red">${query}</span>`);
+                    // .replace('{{num}}', index);
         });
 
-        $searchList.innerHTML +=
+        $searchList.querySelector('#textList').innerHTML +=
             queryTpl.replace(/{{query}}/g, query)
                 .replace('{{textList}}', $textList.join(''));
+        
+        $searchList.querySelector('#countList').innerHTML +=
+            countTpl.replace('{{query}}', query)
+                .replace('{{count}}', $textList.length);
     }
 
 }

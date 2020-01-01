@@ -1849,18 +1849,37 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
 #searchListView .text{
   margin: 5px;
   cursor: pointer;
+  text-overflow: ellipsis;
+  height: 15px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 #searchListView .textList{
   margin-left: 5px;
-  font-size: 14px;
+  font-size: 12px;
 }
 #searchListView .singleQuery{
   position: relative;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 190px;
+}
+#searchListView .query{
+  color: #A6B7D0;
 }
 #searchListView .close{
   position: absolute;
   right: 10px;
   cursor: pointer;
+}
+#countList{
+  padding: 10px 0;
+  border-bottom: 1px dotted;
+  margin: 10px 0;
+}
+#searchListView .red{
+  font-weight: bold;
 }
 #add{
   color: white;
